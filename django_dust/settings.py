@@ -4,12 +4,13 @@ If you want to change these settings define them in your project's settings
 file.
 '''
 
+from django.conf import settings
+
 def getsetting(name, defaults=locals()):
     '''
     Tries to get a setting from Django's default settings object. If not
     available returns a local default.
     '''
-    from django.conf import settings
     return getattr(settings, name, defaults.get(name))
 
 # Retry storage backend setting -- import path for storage module

@@ -21,14 +21,14 @@ class DistributedStorage(Storage):
     DistributedStorage saves files by copying them on several servers listed
     in settings.DUST_HOSTS.
     '''
-    def __init__(self, hosts=None, use_local=None, base_url=settings.MEDIA_URL, **kwargs):
+    def __init__(self, hosts=None, use_local=None, base_url=getsetting(DUST_STORAGE_URL), **kwargs):
         super(DistributedStorage, self).__init__(**kwargs)
         if hosts is None:
             hosts = getsetting('DUST_HOSTS')
         self.hosts = hosts
         if use_local is None:
             use_local = getsetting('DUST_USE_LOCAL_FS')
-        self.local_storage = use_local and FileSystemStorage(base_url=base_url, **kwargs)
+        self.local_storage = use_local and FileSystemStorage(base_url=base_url, location=getsetting(DUST_STORAGE_ROOT), **kwargs)
         self.base_url = base_url
         self.transport = http.HTTPTransport(base_url=base_url)
 
@@ -99,6 +99,15 @@ class DistributedStorage(Storage):
         return name
 
     def get_available_name(self, name):
+        """
+        Deletes the given file if it exists.
+        """
+        if self.exists(name):
+            self.delete(name)
+        return name
+
+    """
+    def get_available_name(self, name):
         from django_dust import retry_storage # this causes errors when imported at module level
         while self.exists(name) or retry_storage.filter_by_filename(name):
             try:
@@ -108,6 +117,7 @@ class DistributedStorage(Storage):
             else:
                 name = name[:dot_index] + '_' + name[dot_index:]
         return name
+    """
 
     def path(self, name):
         if self.local_storage:

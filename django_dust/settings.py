@@ -27,3 +27,6 @@ DUST_HOSTS = ['127.0.0.1']
 # allows django_dust to access files locally saving time and bandwidth
 # on existence checking operations. Defaults to False.
 DUST_USE_LOCAL_FS = False
+
+DUST_STORAGE_URL = settings.MEDIA_URL
+DUST_STORAGE_ROOT = settings.MEDIA_ROOT

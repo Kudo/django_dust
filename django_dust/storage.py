@@ -21,14 +21,14 @@ class DistributedStorage(Storage):
     DistributedStorage saves files by copying them on several servers listed
     in settings.DUST_HOSTS.
     '''
-    def __init__(self, hosts=None, use_local=None, base_url=getsetting(DUST_STORAGE_URL), **kwargs):
+    def __init__(self, hosts=None, use_local=None, base_url=getsetting('DUST_STORAGE_URL'), **kwargs):
         super(DistributedStorage, self).__init__(**kwargs)
         if hosts is None:
             hosts = getsetting('DUST_HOSTS')
         self.hosts = hosts
         if use_local is None:
             use_local = getsetting('DUST_USE_LOCAL_FS')
-        self.local_storage = use_local and FileSystemStorage(base_url=base_url, location=getsetting(DUST_STORAGE_ROOT), **kwargs)
+        self.local_storage = use_local and FileSystemStorage(base_url=base_url, location=getsetting('DUST_STORAGE_ROOT'), **kwargs)
         self.base_url = base_url
         self.transport = http.HTTPTransport(base_url=base_url)
 
